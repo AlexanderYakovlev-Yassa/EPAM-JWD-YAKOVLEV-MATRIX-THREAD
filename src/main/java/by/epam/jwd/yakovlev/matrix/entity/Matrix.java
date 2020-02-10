@@ -1,24 +1,42 @@
 package by.epam.jwd.yakovlev.matrix.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class Matrix {
 
-	private static final Matrix INSTANCE = new Matrix();
+	private int matrixDimension;
+	private HashSet<Cell> matrix;
 
-	private int[][] matrix;
-	private State state = Free.getInstance();
-
-	private Matrix() {
+	public Matrix(int matrixDimension) {
+		this.matrixDimension = matrixDimension;
 	}
 
-	public static Matrix getInstance() {
-		return INSTANCE;
+	public HashSet<Cell> getRowSet(int row){
+
+		HashSet<Cell> res = new HashSet<>();
+
+		for (Cell c : matrix){
+			if (c.getLocation().y == row){
+				res.add(c);
+			}
+		}
+		return res;
 	}
 
-	public State getState() {
-		return state;
+	public HashSet<Cell> getColumnSet(int column){
+
+		HashSet<Cell> res = new HashSet<>();
+
+		for (Cell c : matrix){
+			if (c.getLocation().x == column){
+				res.add(c);
+			}
+		}
+		return res;
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public int getMatrixDimension() {
+		return matrixDimension;
 	}
 }
