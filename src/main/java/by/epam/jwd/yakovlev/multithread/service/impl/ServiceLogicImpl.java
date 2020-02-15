@@ -8,6 +8,7 @@ import by.epam.jwd.yakovlev.multithread.entity.*;
 import by.epam.jwd.yakovlev.multithread.service.exception.ServiceException;
 import by.epam.jwd.yakovlev.multithread.service.ServiceLogic;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,10 +24,18 @@ public class ServiceLogicImpl implements ServiceLogic {
     private StringBuffer result;
 
     @Override
-    public void executeTask(int groupCount) throws ServiceException {
+    public void executeTask(int groupCount, File matrixBlueprint, File resultFile) throws ServiceException {
+
+        if (matrixBlueprint == null){
+            throw new ServiceException("There is no file with blueprint!!!");
+        }
+
+        if (resultFile == null){
+            throw new ServiceException("There is no file to put result!!!");
+        }
 
         try {
-            this.matrix = buildMatrix();
+            this.matrix = buildMatrix(matrixBlueprint);
         } catch (ServiceException e) {
             throw e;
         }
@@ -50,7 +59,7 @@ public class ServiceLogicImpl implements ServiceLogic {
             result.append("\n\nResult state matrix:\n");
             result.append(getMatrix().getStringVisualisedMatrixState());
             result.append("\n");
-            sendToResultStorage(result.toString());
+            sendToResultStorage(resultFile, result.toString());
             printResult();
             clearResult();
             matrix.resetCellsState();
@@ -112,12 +121,16 @@ public class ServiceLogicImpl implements ServiceLogic {
     }
 
     @Override
-    public Matrix buildMatrix() throws ServiceException {
+    public Matrix buildMatrix(File blueprintFile) throws ServiceException {
+
+        if (blueprintFile == null){
+            throw new ServiceException("There is no file with blueprint!!!");
+        }
 
         ArrayList<String> matrixBlueprint = null;
 
         try {
-            matrixBlueprint = DAO_LOGIC.readMatrixBlueprint();
+            matrixBlueprint = DAO_LOGIC.readMatrixBlueprint(blueprintFile);
         } catch (DAOLogicException e) {
             throw new ServiceException("Can't get the blueprint of the matrix", e);
         }
@@ -156,14 +169,18 @@ public class ServiceLogicImpl implements ServiceLogic {
     }
 
     @Override
-    public void sendToResultStorage(String result) throws ServiceException {
+    public void sendToResultStorage(File resultFile, String result) throws ServiceException {
+
+        if (resultFile == null){
+            throw new ServiceException("There is no file to put result!!!");
+        }
 
         if (result == null) {
             throw new ServiceException("There is nothing to save !!!");
         }
 
         try {
-            DAO_LOGIC.saveResult(result);
+            DAO_LOGIC.saveResult(resultFile, result);
         } catch (DAOLogicException e) {
             throw new ServiceException("Fail to put to a storage !!!", e);
         }

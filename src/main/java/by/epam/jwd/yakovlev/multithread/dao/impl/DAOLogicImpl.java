@@ -11,31 +11,29 @@ import java.util.ArrayList;
 public class DAOLogicImpl implements DAOLogic {
 
     private final FileUtil FILE_UTIL = FileUtil.getInstance();
-    private final File RESULT_FILE = new File("src\\main\\resources\\files\\MatrixResult.txt");
-    private final File SOURCE_FILE = new File("src\\main\\resources\\files\\MatrixSource.txt");
 
     @Override
-    public ArrayList<String> readMatrixBlueprint() throws DAOLogicException {
+    public ArrayList<String> readMatrixBlueprint(File blueprintFile) throws DAOLogicException {
 
         ArrayList<String> matrixBlueprint = null;
 
         try {
-            matrixBlueprint = FILE_UTIL.readFile(SOURCE_FILE);
+            matrixBlueprint = FILE_UTIL.readFile(blueprintFile);
         } catch (FileUtilException e) {
-           throw new DAOLogicException("Can't get the blueprint fron source");
+           throw new DAOLogicException("Can't get the blueprint from source");
         }
         return matrixBlueprint;
     }
 
     @Override
-    public void saveResult(String result) throws DAOLogicException {
+    public void saveResult(File resultFile, String result) throws DAOLogicException {
 
         if (result == null){
             throw new DAOLogicException("Nothing to save");
         }
 
         try {
-            FILE_UTIL.addRecordToFile(RESULT_FILE, result);
+            FILE_UTIL.addRecordToFile(resultFile, result);
         } catch (FileUtilException e) {
             throw new DAOLogicException("Fail to save the result");
         }
