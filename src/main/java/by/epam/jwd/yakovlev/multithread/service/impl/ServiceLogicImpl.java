@@ -23,7 +23,7 @@ public class ServiceLogicImpl implements ServiceLogic {
     private StringBuffer result;
 
     @Override
-    public void initialiseTask(int groupCount) throws ServiceException {
+    public void executeTask(int groupCount) throws ServiceException {
 
         try {
             this.matrix = buildMatrix();
@@ -31,35 +31,11 @@ public class ServiceLogicImpl implements ServiceLogic {
             throw e;
         }
 
-        if (groupCount < 1 || groupCount > this.matrix.getDimension()) {
+        if (groupCount < 1) {
             throw new ServiceException("Wrong initialise data!!!");
         }
 
-        this.matrixDimension = this.matrix.getDimension();
-
-        this.groupCount = groupCount;
-
-        result = new StringBuffer("The source matrix:\n");
-        result.append(matrix.getStringVisualisedMatrix());
-        result.append("\n\n");
-
-        groupCounter = 0;
-    }
-
-    @Override
-    public int getCellRangeSum(ArrayList<Cell> range) {
-
-        int sum = 0;
-
-        for (Cell c : range) {
-            sum += c.getValue();
-        }
-
-        return sum;
-    }
-
-    @Override
-    public void executeTask() throws ServiceException {
+        initialiseTask(groupCount);
 
         if (!isTaskInitialised()) {
             throw new ServiceException("Task is not initialised!!!");
@@ -79,6 +55,18 @@ public class ServiceLogicImpl implements ServiceLogic {
             clearResult();
             matrix.resetCellsState();
         }
+    }
+
+    @Override
+    public int getCellRangeSum(ArrayList<Cell> range) {
+
+        int sum = 0;
+
+        for (Cell c : range) {
+            sum += c.getValue();
+        }
+
+        return sum;
     }
 
     @Override
@@ -209,5 +197,18 @@ public class ServiceLogicImpl implements ServiceLogic {
                 groupCount != null &&
                 groupCounter != null &&
                 result != null;
+    }
+
+    private void initialiseTask(int groupCount) throws ServiceException {
+
+        this.matrixDimension = this.matrix.getDimension();
+
+        this.groupCount = groupCount;
+
+        result = new StringBuffer("The source matrix:\n");
+        result.append(matrix.getStringVisualisedMatrix());
+        result.append("\n\n");
+
+        groupCounter = 0;
     }
 }

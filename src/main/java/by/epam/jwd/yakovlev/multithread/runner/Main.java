@@ -11,14 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            LOGIC.initialiseTask(5);
-        } catch (ServiceException e) {
-            System.out.println("Can't initialise Task !!!");
-            System.out.println(e);
-        }
-
-        try {
-            LOGIC.executeTask();
+            LOGIC.executeTask(5);
         } catch (ServiceException e) {
             System.out.println(e.getMessage());
         }

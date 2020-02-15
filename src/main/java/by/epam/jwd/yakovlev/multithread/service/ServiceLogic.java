@@ -10,10 +10,9 @@ import java.util.concurrent.CyclicBarrier;
 public interface ServiceLogic {
 
 int getCellRangeSum(ArrayList<Cell> range);
-void executeTask() throws ServiceException;
+void executeTask(int groupCount) throws ServiceException;
 void printResult();
 void startGroupOfWorkThread();
-void initialiseTask(int groupCount) throws ServiceException;
 Matrix getMatrix();
 StringBuffer getResult();
 void clearResult();
